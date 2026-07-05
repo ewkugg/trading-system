@@ -64,6 +64,81 @@ This copies the shared references into each skill so the packaged version is sel
 writes `dist/<skill>.skill`. Upload those in the web app under **Settings → Skills**. Never edit
 the `dist/` files by hand — they're rebuilt from `skills/`.
 
+## System map — all paths, stages, and variables
+
+```mermaid
+flowchart TD
+    CONST[["references/trading-constants.md<br/>R/R gate · 1–2% cap · regime-scaled heat ceiling<br/>theme cap · stop rule · VIX/RSI bands · catalyst window<br/>rule-promotion standard"]]
+    NAV["trading-navigator (router)"]
+
+    subgraph S1["STAGE 1 — REGIME"]
+        MR["market-regime<br/>inputs: distribution days · FTD · breadth · VIX"]
+    end
+    subgraph S2["STAGE 2 — INTEL"]
+        BRIEF["daily-market-brief"]
+        PULSE["ai-tech-pulse"]
+    end
+    subgraph S3["STAGE 3 — DISCOVERY"]
+        HUNT["sector-rotation-stock-hunter<br/>(position-aware, Track A/B, score ≥7)"]
+    end
+    subgraph S4["STAGE 4 — DECISION"]
+        SWING["swing-trade-analysis"]
+        CRYPTO["crypto-swing-analysis"]
+        GATE{"Layer 0: R/R ≥ 2:1?<br/>then Layers 1–4:<br/>macro·catalyst·technical·sentiment"}
+    end
+    subgraph S5["STAGE 5 — MEMORY (trade-journal-postmortem)"]
+        HC["Heat Check<br/>Σ risk_pct total & per theme"]
+        M1["Mode 1: open thesis"]
+        M2["Mode 2: close + postmortem"]
+        M3["Mode 3: periodic review"]
+    end
+    JRNL[("journal/ — one note per trade:<br/>risk_pct · planned entry/stop/target · planned_rr<br/>regime_at_entry · tags(theme) · invalidation · status")]
+    IBKR[("IBKR — read-only<br/>fills · positions")]
+    HUMAN{{"HUMAN DECISION GATE<br/>only the user ever trades"}}
+
+    MR -- "verdict 🟢6% / 🟡3% / 🔴0–1%<br/>= heat ceiling in effect" --> HC
+    MR -- "🔴 RISK-OFF: no new positions →<br/>review open theses only" --> M1
+    HC -- "remaining risk budget<br/>+ open-position list (ticker·theme·risk_pct)" --> HUNT
+    JRNL -- "open notes" --> HC
+    IBKR -- "position cross-check" --> HC
+    BRIEF -- "VIX · 10Y · DXY · themes w/ equity angle" --> HUNT
+    PULSE -- "handoff feed: ticker + attribution only" --> HUNT
+    HUNT -- "scored candidates<br/>(flag correlated / already-held themes)" --> SWING
+    HUNT -- "BTC/ETH ideas" --> CRYPTO
+    SWING --> GATE
+    CRYPTO --> GATE
+    GATE -- "PASS: entry · stop · target · R/R<br/>size = risk% ÷ stop-distance%" --> HUMAN
+    GATE -. "REJECT: note qualifying entry, monitor" .-> HUNT
+    HUMAN -- "trade taken" --> M1
+    M1 -- "thesis + invalidation + regime_at_entry" --> JRNL
+    IBKR -- "fills at close" --> M2
+    M2 -- "realized R · MAE/MFE ·<br/>process score vs P&L score" --> JRNL
+    JRNL -- "closed trades" --> M3
+    M3 -- "falsifiable rules: recurring ≥3 trades,<br/>back-checked ≥20, else provisional:" --> CONST
+    CONST -. "all gates & caps feed every stage" .-> MR
+    NAV -.-> S1
+```
+
+**The three daily paths** (scheduled — see `workflows/daily-automation.md`):
+
+| Path | Route through the map | Stops when |
+|---|---|---|
+| **Pre-market** (12:30 UTC M–F) | REGIME → Heat Check → INTEL → DISCOVERY → DECISION → human gate | 🔴 regime, no heat budget, no leading sector, or Layer-0 REJECT |
+| **After-close** (20:45 UTC M–F) | IBKR fills → Mode 2 postmortems → open-thesis invalidation checks | always runs to completion, commits `journal/` |
+| **Weekly review** (Fri 21:30 UTC) | Mode 3 → regime attribution → falsifiable rules → constants (via promotion standard) | rule promotions proposed, never auto-applied |
+
+**Key variables and where they live:**
+
+| Variable | Set by | Read by | Canonical home |
+|---|---|---|---|
+| Regime verdict (🟢/🟡/🔴) | `market-regime` | Heat Check, both DECISION skills, hunter, journal | session (recorded per trade as `regime_at_entry`) |
+| Heat ceiling in effect (6/3/0–1%) | regime verdict × heat table | Heat Check, sizing | `trading-constants.md` |
+| Theme cap (½ ceiling) | constants | Heat Check, hunter | `trading-constants.md` |
+| Open positions & `risk_pct` | Mode 1 (entry), Mode 2 (close) | Heat Check, hunter | `journal/` (cross-checked vs IBKR) |
+| Per-trade risk cap (1–2%), R/R gate (≥2:1), stop rule (≤7–8%, structural), VIX/RSI bands, catalyst window (2–6w) | constants | every DECISION run | `trading-constants.md` |
+| Realized R, MAE/MFE, process score | Mode 2 | Mode 3 | `journal/` |
+| Operating rules | Mode 3 (via promotion standard) | every skill | `trading-constants.md` |
+
 ## Naming conventions (three vocabularies, kept apart)
 
 - **Stage** — a tier of the system pipeline: REGIME → INTEL → DISCOVERY → DECISION → MEMORY.
