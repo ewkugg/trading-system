@@ -8,6 +8,7 @@
 | 1 | Pull the day's fills | `trade-journal-postmortem` | IBKR read-only (or pasted CSV). |
 | 2 | Postmortem each close | `trade-journal-postmortem` (Mode 2) | Plan vs. actual, realized R, **MAE/MFE computed from IBKR price history** (period high/low over the holding window — never from memory), exit-plan adherence, process score. |
 | 3 | Manage open trades | `trade-journal-postmortem` | For each open thesis, against the **trade-management rules** (constants): invalidation intact? +1R reached → breakeven stop due? +2R → the chosen `exit_plan` action due? `time_stop` date approaching? Crypto: resting stop confirmed at the exchange? Mark tomorrow's required actions. |
+| 3b | Flow check on holdings | `institutional-flow` (Mode A) | Volume signature on each open position. **DISTRIBUTING while you hold** → tighten the stop or take the partial early; record the flag in the thesis note. |
 | 4 | Update drawdown status | `trade-journal-postmortem` | Add today's realized P&L to month-to-date; check the **drawdown circuit breaker** — if a throttle triggered, state tomorrow's reduced caps. |
 
 **Artifacts:** updated journal notes (`status: closed` with postmortems filled in) and a

@@ -29,7 +29,7 @@ Modes 1–3. Three distinct vocabularies, on purpose.)*
 ```
 REGIME       is it safe to trade   → market-regime (sets the heat ceiling for the day)
    ↓
-INTEL        what's happening      → daily-market-brief, ai-tech-pulse
+INTEL        what's happening      → daily-market-brief, ai-tech-pulse, institutional-flow
    ↓
 DISCOVERY    what to look at       → sector-rotation-stock-hunter
    ↓
@@ -52,6 +52,7 @@ ceiling for everything below it (see the regime-scaled heat table in the constan
 | "how much heat am I carrying", "can I add a position" | `trade-journal-postmortem` (Heat Check) |
 | "what's going on in markets", "morning macro", "今日市场" | `daily-market-brief` |
 | "what's new in AI/tech", "interesting takes on X" | `ai-tech-pulse` |
+| "what are institutions doing", "is smart money buying X", "13F/insider check", "主力资金" | `institutional-flow` |
 | "find candidates in [sector]", "what's hot right now" | `sector-rotation-stock-hunter` |
 | "should I buy [stock] here", "analyze [ticker]", "波段" | `swing-trade-analysis` |
 | "should I buy BTC/ETH", "crypto entry" | `crypto-swing-analysis` |

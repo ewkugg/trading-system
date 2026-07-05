@@ -134,6 +134,8 @@ Run this whenever the question is "X is down today, is it a chance to add?":
 ### Fundamental criteria — "already discovered" is fine, even expected
 - [ ] Real revenue/contract exposure to the theme — narrative alone still isn't enough
 - [ ] No thesis-breaking news (covered by Dip Diagnosis above)
+- [ ] **Flow check** (`institutional-flow` Mode A): volume signature not DISTRIBUTING — a
+  hot name being distributed into strength is the bag-holding setup, not the momentum one
 - [ ] Liquidity: average daily dollar volume high enough to actually size a position and get out
   cleanly — this matters more here than a market-cap band, since efficient capital use depends on
   being able to enter/exit without moving the price
@@ -160,7 +162,8 @@ trade workable in size.
 ### Fundamental criteria
 - [ ] Real, direct revenue exposure to the theme — not just a narrative/concept tag
 - [ ] Revenue growth accelerating over the last 1–2 quarters, or guidance was raised
-- [ ] Institutional ownership has been increasing recently (13F filings)
+- [ ] Institutional ownership has been increasing recently (`institutional-flow` Mode A —
+  13F trend + insider Form 4 buys; remember 13Fs confirm sponsorship, never timing)
 - [ ] Market cap roughly $500M–$10B as a default sweet spot — flexes by sector
 
 ---

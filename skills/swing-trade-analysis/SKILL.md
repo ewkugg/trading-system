@@ -177,6 +177,10 @@ If no catalyst exists within 6 weeks, downgrade confidence and reduce target siz
 - **Analyst consensus**: If >90% Buy ratings, sentiment is already crowded. Any miss will cause outsized selling. If consensus is mixed (50–70% Buy), there's more room for upgrades to drive the stock.
 - **Recent news tone**: Look for whether news is incrementally positive (analyst upgrades, product announcements, beat-and-raise) or negative (downgrades, macro concerns, supply issues).
 - **Implied Volatility (optional)**: If options IV is low, options pricing is cheap (good for buying calls ahead of catalysts). If IV is elevated, options are expensive.
+- **Institutional flow** (`institutional-flow` Mode A, if not already run this session): the
+  volume-signature verdict is the tiebreaker for this layer — crowded-and-DISTRIBUTING is a
+  ❌ regardless of analyst tone; cold-but-ACCUMULATING upgrades a NEUTRAL to ✅. Record the
+  verdict in the journal's checklist snapshot.
 
 **Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
 

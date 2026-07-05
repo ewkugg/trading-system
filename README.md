@@ -22,6 +22,7 @@ trading-system/
 │   ├── market-regime/               REGIME: breadth/distribution/FTD → 🟢/🟡/🔴, sets heat ceiling
 │   ├── daily-market-brief/          INTEL: macro/rates/Fed digest
 │   ├── ai-tech-pulse/               INTEL: AI/tech news + handoff feed of ideas
+│   ├── institutional-flow/          INTEL: big-money accumulation/distribution + rotation
 │   ├── sector-rotation-stock-hunter/ DISCOVERY: position-aware candidate screen (Track A/B)
 │   ├── swing-trade-analysis/        DECISION: Layer-0 gate + 4-layer checklist (stocks)
 │   ├── crypto-swing-analysis/       DECISION: same framework, crypto-native layers (BTC/ETH)
@@ -77,6 +78,7 @@ flowchart TD
     subgraph S2["STAGE 2 — INTEL"]
         BRIEF["daily-market-brief"]
         PULSE["ai-tech-pulse"]
+        INST["institutional-flow<br/>volume signature · 13F/Form 4 · ETF flows"]
     end
     subgraph S3["STAGE 3 — DISCOVERY"]
         HUNT["sector-rotation-stock-hunter<br/>(position-aware, Track A/B, score ≥7)"]
@@ -103,6 +105,9 @@ flowchart TD
     IBKR -- "position cross-check" --> HC
     BRIEF -- "VIX · 10Y · DXY · themes w/ equity angle" --> HUNT
     PULSE -- "handoff feed: ticker + attribution only" --> HUNT
+    INST -- "Mode B: sectors money rotates into/out of" --> HUNT
+    INST -- "Mode A: flow verdict<br/>ACCUMULATING / NEUTRAL / DISTRIBUTING" --> GATE
+    INST -. "exit-side check: DISTRIBUTING on a held name<br/>→ tighten stop / early partial" .-> M2
     HUNT -- "scored candidates<br/>(flag correlated / already-held themes)" --> SWING
     HUNT -- "BTC/ETH ideas" --> CRYPTO
     SWING --> GATE
@@ -136,7 +141,10 @@ flowchart TD
 | Theme cap (½ ceiling) | constants | Heat Check, hunter | `trading-constants.md` |
 | Open positions & `risk_pct` | Mode 1 (entry), Mode 2 (close) | Heat Check, hunter | `journal/` (cross-checked vs IBKR) |
 | Per-trade risk cap (1–2%), R/R gate (≥2:1), stop rule (≤7–8%, structural), VIX/RSI bands, catalyst window (2–6w) | constants | every DECISION run | `trading-constants.md` |
-| Realized R, MAE/MFE, process score | Mode 2 | Mode 3 | `journal/` |
+| `exit_plan` (partial-at-2R / ma-trail) + `time_stop` | chosen at entry (DECISION → Mode 1) | after-close open-trade management | `journal/` (rules in `trading-constants.md`) |
+| Month-to-date drawdown & throttle level | Mode 2 (after each close) | Heat Check (lower ceiling wins), weekly review | `journal/` (levels in `trading-constants.md`) |
+| Flow verdict (accumulating/distributing) | `institutional-flow` Mode A | Layer 4, hunter, after-close exit check | session (recorded in checklist snapshot) |
+| Realized R, MAE/MFE (computed from IBKR bars), process score | Mode 2 | Mode 3 | `journal/` |
 | Operating rules | Mode 3 (via promotion standard) | every skill | `trading-constants.md` |
 
 ## Naming conventions (three vocabularies, kept apart)

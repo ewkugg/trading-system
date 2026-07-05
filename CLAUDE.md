@@ -24,7 +24,8 @@ REGIME → INTEL → DISCOVERY → DECISION → MEMORY   (+ navigator & constant
 ```
 - **Regime:** `market-regime` (breadth / distribution days / FTD → GREEN/CAUTION/RISK-OFF
   verdict, which scales the portfolio-heat ceiling for everything downstream)
-- **Intel:** `daily-market-brief`, `ai-tech-pulse`
+- **Intel:** `daily-market-brief`, `ai-tech-pulse`, `institutional-flow` (accumulation/
+  distribution per ticker + market-wide rotation; also the exit-side check in after-close)
 - **Discovery:** `sector-rotation-stock-hunter`
 - **Decision:** `swing-trade-analysis`, `crypto-swing-analysis`
 - **Memory:** `trade-journal-postmortem`
