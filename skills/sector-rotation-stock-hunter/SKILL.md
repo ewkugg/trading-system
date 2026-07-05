@@ -46,9 +46,16 @@ screen and shouldn't be blended:
 about yet" or asks specifically for early-stage/undiscovered names.
 
 Whichever track: this skill finds and ranks candidates. It does not decide entry price,
-stop-loss, position size, or whether to use margin — that's `swing-trade-analysis`, which every
-candidate from here should pass through before any money moves. See that skill's "Capital
-Efficiency, Concentration & Margin" section for how to size once a candidate clears this screen.
+stop-loss, or position size — that's `swing-trade-analysis`, which every candidate from here
+should pass through before any money moves. Sizing and concentration limits (the 1–2% cap,
+regime-scaled heat ceiling, and correlated-exposure/theme cap) are all defined in
+`references/trading-constants.md`.
+
+**Check current positions first.** If the journal's Heat Check ran this session, use its
+open-position list; otherwise ask for (or pull via IBKR) current holdings before ranking.
+A candidate in a theme the portfolio already holds gets flagged — if that theme is at its
+correlated-exposure cap, the candidate is a **swap decision** (is it better than what's
+held?), never an add. Don't rank the user into a position they already own.
 
 ---
 
@@ -127,6 +134,8 @@ Run this whenever the question is "X is down today, is it a chance to add?":
 ### Fundamental criteria — "already discovered" is fine, even expected
 - [ ] Real revenue/contract exposure to the theme — narrative alone still isn't enough
 - [ ] No thesis-breaking news (covered by Dip Diagnosis above)
+- [ ] **Flow check** (`institutional-flow` Mode A): volume signature not DISTRIBUTING — a
+  hot name being distributed into strength is the bag-holding setup, not the momentum one
 - [ ] Liquidity: average daily dollar volume high enough to actually size a position and get out
   cleanly — this matters more here than a market-cap band, since efficient capital use depends on
   being able to enter/exit without moving the price
@@ -153,7 +162,8 @@ trade workable in size.
 ### Fundamental criteria
 - [ ] Real, direct revenue exposure to the theme — not just a narrative/concept tag
 - [ ] Revenue growth accelerating over the last 1–2 quarters, or guidance was raised
-- [ ] Institutional ownership has been increasing recently (13F filings)
+- [ ] Institutional ownership has been increasing recently (`institutional-flow` Mode A —
+  13F trend + insider Form 4 buys; remember 13Fs confirm sponsorship, never timing)
 - [ ] Market cap roughly $500M–$10B as a default sweet spot — flexes by sector
 
 ---
@@ -207,18 +217,24 @@ above trend support" check.
 
 **Only consider building a position at a score of 7+, either track.**
 
+**Scores are a shortlisting device, not a measurement.** They're judgment calls and won't
+be perfectly reproducible run-to-run, so: record the sub-score for each dimension with a
+one-line justification (what fact earned the points), and never treat 7-vs-6 as a real
+distinction — a borderline score means "look closer," and the real gate is
+`swing-trade-analysis`'s Layer 0, which is arithmetic, not judgment.
+
 ---
 
 ## Step 5: Hand Off to swing-trade-analysis
 
-Once a candidate scores 7+, hand the ticker to `swing-trade-analysis` for entry/stop/target and
-sizing — including whether margin makes sense for this specific candidate (see that skill's
-Capital Efficiency section). Track A names, being more liquid, are the more natural candidates
-for margin use; Track B names usually aren't.
+Once a candidate scores 7+, hand the ticker to `swing-trade-analysis` for entry/stop/target
+and sizing.
 
-If multiple Track A names from the *same* theme clear the bar at once (likely, since "go with the
-flow" naturally produces correlated candidates), flag that explicitly when handing off — that's
-exactly the case `swing-trade-analysis`'s correlated-exposure cap exists for.
+If multiple Track A names from the *same* theme clear the bar at once (likely, since "go with
+the flow" naturally produces correlated candidates), flag that explicitly when handing off —
+that's exactly the case the **correlated-exposure cap** in `trading-constants.md` exists for:
+the theme as a whole can carry at most half the regime heat ceiling, however many tickers
+it's spread across.
 
 ---
 
@@ -249,7 +265,7 @@ run the top candidate(s) through `swing-trade-analysis` before sizing any actual
 - ❌ Don't treat "already in the news" as disqualifying in Track A — that's the wrong instinct for momentum trading
 - ❌ Don't skip the Dip Diagnosis — buying a dip without checking *why* it's down is how you catch a falling knife
 - ❌ In Track B, don't chase a name that's already run 100%+ — the easy money in the leg is gone
-- ❌ Don't ignore broader market regime — these setups fail more in elevated-VIX/sector-downtrend tape (check via `swing-trade-analysis`'s macro layer)
+- ❌ Don't ignore broader market regime — run `market-regime` first; in 🔴 RISK-OFF this skill builds watchlists only, no BUYABLE DIP verdicts (three of four stocks follow the general market)
 - ❌ Don't size or stop-loss a position here — that's `swing-trade-analysis`'s job
 - ✅ If you can't find a high-conviction single name, the sector ETF itself is reasonable default exposure to the theme
 
@@ -266,3 +282,11 @@ run the top candidate(s) through `swing-trade-analysis` before sizing any actual
 
 Past performance of these names is not a guarantee the same pattern repeats — use this table to
 understand the *type* of setup being targeted in each track, not as current recommendations.
+
+**This table is survivorship-biased by construction** — it contains only setups that worked.
+The same patterns fail constantly: Track A dips that were actually thesis breaks (the Dip
+Diagnosis exists because of them), and Track B "completed bottoms" that were mid-decline
+consolidations. The base rate for these setups is closer to a coin flip than this table
+implies; the edge is in the R/R of the entries, not the pattern's hit rate. As the journal
+accumulates real closed trades, *your own* failed setups become the counter-table — review
+them alongside this one.

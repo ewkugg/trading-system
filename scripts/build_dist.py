@@ -21,6 +21,8 @@ DIST = ROOT / "dist"
 
 # Which shared references each skill should carry in its packaged (web-app) copy.
 SHARED = {
+    "market-regime":               ["trading-constants.md"],
+    "institutional-flow":          ["trading-constants.md"],
     "swing-trade-analysis":        ["trading-constants.md"],
     "crypto-swing-analysis":       ["trading-constants.md"],
     "sector-rotation-stock-hunter":["trading-constants.md"],

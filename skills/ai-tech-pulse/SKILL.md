@@ -117,8 +117,14 @@ This section is explicitly speculative and should read that way. The value isn't
 trades" — it's "here's how a sharp, slightly unhinged person is currently thinking about the
 sector," which is useful even when (especially when) you disagree with the conclusion.
 
-There's no live X firehose connector by default — check once via `search_mcp_registry` in case
-one's since been connected; otherwise `web_search` per account (e.g. "[handle] stock thesis" or
+**This section is a handoff feed, not a screen.** Its job ends at *ticker + one-line
+attribution* — who said it, what the claimed angle is. Do not evaluate, rank, or add
+technical/fundamental color to the ideas here; that duplicates `sector-rotation-stock-hunter`,
+which is where any name worth a second look goes next (and it will pull this list from the
+session automatically). One skill discovers, one skill judges.
+
+There's no live X firehose connector by default — check once whether one is connected in the
+current environment; otherwise `web_search` per account (e.g. "[handle] stock thesis" or
 just the handle + today's date) to surface recent posts.
 
 Starting roster — extend freely, this category lives or dies on finding fresh idiosyncratic
@@ -140,13 +146,15 @@ unvetted opinions.
 ### Geeky Voices — [Date]
 
 **@handle**: [one-line paraphrase of their overall framing/mood today]
-- $TICKER — [paraphrased one-line thesis]
-- $TICKER — [paraphrased one-line thesis]
+- $TICKER — [paraphrased one-line claim — attribution only, no evaluation]
+- $TICKER — [paraphrased one-line claim]
 
 [Repeat per account with something notable to say today]
 
-⚠️ Speculative, unvetted, not a recommendation — if a name here is interesting enough to dig
-into, run it through sector-rotation-stock-hunter for an actual technical/fundamental read.
+**Handoff feed for the hunter:** [$TICKER (@handle), $TICKER (@handle), ...]
+
+⚠️ Speculative, unvetted, not a recommendation — anything worth a second look goes through
+sector-rotation-stock-hunter for the actual technical/fundamental read; nothing here has one.
 ```
 
 ---

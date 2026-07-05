@@ -1,7 +1,7 @@
 ---
 name: crypto-swing-analysis
 description: >
-  A systematic 5-layer checklist framework for swing trading BTC and ETH (days to weeks).
+  A systematic checklist framework — a Layer-0 R/R gate plus a 4-layer checklist — for swing trading BTC and ETH (days to weeks). Layer numbering matches swing-trade-analysis (1 macro, 2 catalyst, 3 technical, 4 sentiment).
   Use this skill whenever the user asks to analyze Bitcoin or Ethereum for swing trading,
   wave trading, or short-to-medium term entry/exit decisions. Triggers include:
   "should I buy BTC now", "is ETH a good entry", "analyze bitcoin for swing trading",
@@ -67,6 +67,12 @@ have moved enough intraday to matter, and re-fetching just burns calls for the s
 Otherwise, search for current values before running any layer. Each search should be fresh —
 do not rely on memory for price or sentiment data.
 
+**Prefer computed numbers over scraped ones.** If a crypto-capable data connector is
+available (IBKR carries BTC/ETH via crypto contracts and futures), pull daily bars and
+**compute** RSI(14) and the 20/50/200-day MAs directly rather than trusting a scraped
+article's values — stops sit at these levels. web_search remains the source for
+sentiment-type data (Fear & Greed, funding, ETF flows).
+
 ### For BTC:
 | Data Point | Search Query |
 |---|---|
@@ -130,6 +136,10 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 ### Layer 1 — Macro Filter
 *Purpose: Is the broad risk environment permissive?*
 
+- **Market regime first:** if `market-regime` ran this session, its verdict overrides the
+  spot checks below — 🔴 RISK-OFF means Layer 1 FAILs (crypto sells off hardest in a
+  risk-off tape), 🟡 CAUTION caps size at half within the reduced heat ceiling. If no
+  verdict exists yet, run `market-regime` before continuing.
 - **VIX < 18**: Green. (Tighter than the stock skill's <20 threshold — intentional. Crypto's
   baseline volatility is higher, so the same level of market fear shows up at a lower VIX print.)
 - **VIX 18–25**: Yellow. Proceed with smaller size, tighter structural stops.
@@ -141,14 +151,17 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 2 — On-Chain Sentiment
-*Purpose: Is the crowd already positioned, or is there room for the move?*
+### Layer 2 — Catalyst Calendar
+*Purpose: Is there a known event in the next 2–6 weeks that can drive a move?*
 
-- **Fear & Greed Index**: Extreme Fear (<25) near support = contrarian long setup. Extreme Greed (>75) = late, expect chop or pullback; don't chase.
-- **Funding rate**: The crowd's leveraged bet. Heavily positive funding = longs crowded, squeeze risk to the downside. Negative funding + extreme fear = squeeze setup to the upside.
-- **ETF flows**: Sustained net inflows = institutional bid underneath price. Outflows = distribution; treat rallies with suspicion.
+- **ETF flow trends** — the dominant institutional catalyst for BTC; watch for accelerating in/outflows.
+- **Macro events** — FOMC, CPI, jobs data. Crypto is highly rate- and liquidity-sensitive.
+- **Protocol events** — for ETH especially: upgrades, staking/roadmap milestones, gas dynamics.
+- **Geopolitical / regulatory** — headlines move crypto faster and harder than stocks.
 
-**Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
+**Output**: YES (catalyst within window) / NO (no near-term catalyst)
+
+If no catalyst exists within 6 weeks, downgrade confidence and reduce target size.
 
 ---
 
@@ -164,17 +177,14 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 4 — Catalyst Calendar
-*Purpose: Is there a known event in the next 2–6 weeks that can drive a move?*
+### Layer 4 — On-Chain Sentiment
+*Purpose: Is the crowd already positioned, or is there room for the move?*
 
-- **ETF flow trends** — the dominant institutional catalyst for BTC; watch for accelerating in/outflows.
-- **Macro events** — FOMC, CPI, jobs data. Crypto is highly rate- and liquidity-sensitive.
-- **Protocol events** — for ETH especially: upgrades, staking/roadmap milestones, gas dynamics.
-- **Geopolitical / regulatory** — headlines move crypto faster and harder than stocks.
+- **Fear & Greed Index**: Extreme Fear (<25) near support = contrarian long setup. Extreme Greed (>75) = late, expect chop or pullback; don't chase.
+- **Funding rate**: The crowd's leveraged bet. Heavily positive funding = longs crowded, squeeze risk to the downside. Negative funding + extreme fear = squeeze setup to the upside.
+- **ETF flows**: Sustained net inflows = institutional bid underneath price. Outflows = distribution; treat rallies with suspicion.
 
-**Output**: YES (catalyst within window) / NO (no near-term catalyst)
-
-If no catalyst exists within 6 weeks, downgrade confidence and reduce target size.
+**Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
 
 ---
 
@@ -192,13 +202,16 @@ Layer 0 must PASS before counting other layers.
 | PASS | 2/4 | Low | Wait. Track the thesis. |
 | PASS | 1/4 | None | No trade. State what would need to change. |
 
-### Always Specify Four Numbers
+### Always Specify Four Numbers — and the Exit Plan
 
 Every recommendation must include:
 1. **Entry zone**: Price range where R/R becomes favorable
-2. **Stop-loss**: Level where trade thesis is broken
+2. **Stop-loss**: Level where trade thesis is broken — and it must be a **resting order at
+   the exchange**, never mental (24/7 market, per constants)
 3. **Target**: First realistic resistance / catalyst price objective
 4. **R/R Ratio**: Explicitly state (Target−Entry) ÷ (Entry−Stop)
+5. **Exit plan** (per the trade-management rules in the constants): breakeven at +1R, then
+   *partial-at-2R* or *MA-trail* — pick one now, plus the time-stop date.
 
 ### Crypto Position Sizing & Portfolio Risk Cap
 
@@ -238,9 +251,9 @@ give a precise figure instead.
 | Layer | Status | Key Data |
 |---|---|---|
 | Macro | ✅/⚠️/❌ | VIX: XX, DXY: XXX, Market trend: up/down |
-| On-Chain Sentiment | ✅/⚠️/❌ | Fear & Greed: XX, Funding rate: X.XX%, ETF flows: +/-$XXM |
-| Technical | ✅/⚠️/❌ | RSI: XX, Price vs 50MA: above/below, vs 200MA: above/below |
 | Catalyst | ✅/⚠️/❌ | [Event] in N weeks / no near-term catalyst |
+| Technical | ✅/⚠️/❌ | RSI: XX, Price vs 50MA: above/below, vs 200MA: above/below |
+| On-Chain Sentiment | ✅/⚠️/❌ | Fear & Greed: XX, Funding rate: X.XX%, ETF flows: +/-$XXM |
 
 ### Judgment
 R/R: X:1 | [X]/4 layers green → [High/Medium/Low/No] confidence

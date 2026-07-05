@@ -20,10 +20,16 @@ just use that skill; reach for the navigator when the goal is broad, ambiguous, 
 
 ---
 
-## The system in four layers
+## The system in five stages
+
+*("Stage" = a tier of this pipeline. "Layer 0–4" always means the checklist inside the
+decision skills — Layer 0 is the R/R gate. The journal's functions are the Heat Check and
+Modes 1–3. Three distinct vocabularies, on purpose.)*
 
 ```
-INTEL        what's happening      → daily-market-brief, ai-tech-pulse
+REGIME       is it safe to trade   → market-regime (sets the heat ceiling for the day)
+   ↓
+INTEL        what's happening      → daily-market-brief, ai-tech-pulse, institutional-flow
    ↓
 DISCOVERY    what to look at       → sector-rotation-stock-hunter
    ↓
@@ -33,7 +39,8 @@ MEMORY       what happened / learn → trade-journal-postmortem
 ```
 
 Data flows top to bottom; lessons flow back up. The navigator (this skill) and the constants
-file sit beside all four as the meta layer.
+file sit beside all five stages as the meta level. The regime verdict scales the portfolio-heat
+ceiling for everything below it (see the regime-scaled heat table in the constants file).
 
 ---
 
@@ -41,8 +48,11 @@ file sit beside all four as the meta layer.
 
 | User goal / phrasing | Send them to |
 |---|---|
+| "is it safe to trade", "market health/breadth", "how much exposure", "大盘环境" | `market-regime` |
+| "how much heat am I carrying", "can I add a position" | `trade-journal-postmortem` (Heat Check) |
 | "what's going on in markets", "morning macro", "今日市场" | `daily-market-brief` |
 | "what's new in AI/tech", "interesting takes on X" | `ai-tech-pulse` |
+| "what are institutions doing", "is smart money buying X", "13F/insider check", "主力资金" | `institutional-flow` |
 | "find candidates in [sector]", "what's hot right now" | `sector-rotation-stock-hunter` |
 | "should I buy [stock] here", "analyze [ticker]", "波段" | `swing-trade-analysis` |
 | "should I buy BTC/ETH", "crypto entry" | `crypto-swing-analysis` |
@@ -71,6 +81,7 @@ file sit beside all four as the meta layer.
 ## Handoff principle
 
 Every handoff carries forward the numbers already computed (don't re-fetch what a prior skill in
-the same session already pulled — e.g. reuse the brief's VIX/DXY). The journal closes the loop:
+the same session already pulled — the regime verdict + heat ceiling from `market-regime`, the
+open-position list from the journal's Heat Check, the brief's VIX/DXY). The journal closes the loop:
 its periodic review can promote a durable lesson into `references/trading-constants.md`, which then
 updates every skill at once.

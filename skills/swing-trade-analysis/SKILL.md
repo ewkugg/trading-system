@@ -1,7 +1,8 @@
 ---
 name: swing-trade-analysis
 description: >
-  A systematic 4-layer checklist framework for swing trading analysis on any stock.
+  A systematic checklist framework — a Layer-0 R/R gate plus a 4-layer checklist
+  (1 macro, 2 catalyst, 3 technical, 4 sentiment) — for swing trading analysis on any stock.
   Use this skill whenever the user asks to analyze a stock for swing trading, wave trading
   (波段交易), or short-to-medium term entry/exit decisions. Triggers include: "should I buy X now",
   "is X a good entry", "analyze X for swing trading", "help me trade X", "给我分析一下X波段", 
@@ -51,8 +52,15 @@ move toward an identifiable target, before an identifiable catalyst?*
 
 **Check this conversation first.** If `daily-market-brief` already ran earlier in this session,
 reuse its VIX, 10Y yield, and Nasdaq/S&P trend figures instead of re-searching — they won't have
-moved enough intraday to matter, and re-fetching just burns calls for the same answer. Otherwise,
-search for current values for:
+moved enough intraday to matter, and re-fetching just burns calls for the same answer.
+
+**Prefer computed numbers over scraped ones.** When the Interactive Brokers connector is
+available, it is the **primary** source for anything price-derived: `search_contracts` →
+`get_price_snapshot` for live prices, and `get_price_history` (daily bars) to **compute**
+RSI(14), the 20/50/200-day MAs, and actual swing-high/low support-resistance levels
+yourself. Entries and stops are set at these levels — they deserve exact values, not a
+third-party article's stale or differently-parameterized print. Use web_search as the
+fallback, and for things that aren't price series (earnings dates, analyst consensus, news):
 
 | Data Point | Where to Find | Why It Matters |
 |---|---|---|
@@ -77,7 +85,8 @@ A trade with bad risk/reward should be rejected even if all other layers are gre
 
 **Calculate the three numbers:**
 - **Entry**: The price you would buy at (current price, or target pullback level)
-- **Stop**: The price at which the trade thesis is broken (key support level, MA, or -7% rule)
+- **Stop**: The price at which the trade thesis is broken (key support level, MA — see the
+  stop-placement rule in `trading-constants.md`)
 - **Target**: The first realistic resistance / catalyst-driven price objective
 
 **Reward/Risk Ratio = (Target − Entry) ÷ (Entry − Stop)**
@@ -99,9 +108,13 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 1 — Macro Filter (weekly check)
+### Layer 1 — Macro Filter
 *Purpose: Is the environment permissive for risk-on trades?*
 
+- **Market regime first:** if `market-regime` ran this session, its verdict overrides the
+  spot checks below — 🔴 RISK-OFF means Layer 1 FAILs regardless of today's VIX print, and
+  🟡 CAUTION caps this trade at half size within the reduced heat ceiling. If no verdict
+  exists yet, run `market-regime` before continuing.
 - **VIX < 20**: Green. Clean environment for swing trades.
 - **VIX 20–25**: Yellow. Proceed with smaller size, tighter stops.
 - **VIX > 25**: Red. Skip or wait. Even good setups fail in fearful markets.
@@ -164,6 +177,10 @@ If no catalyst exists within 6 weeks, downgrade confidence and reduce target siz
 - **Analyst consensus**: If >90% Buy ratings, sentiment is already crowded. Any miss will cause outsized selling. If consensus is mixed (50–70% Buy), there's more room for upgrades to drive the stock.
 - **Recent news tone**: Look for whether news is incrementally positive (analyst upgrades, product announcements, beat-and-raise) or negative (downgrades, macro concerns, supply issues).
 - **Implied Volatility (optional)**: If options IV is low, options pricing is cheap (good for buying calls ahead of catalysts). If IV is elevated, options are expensive.
+- **Institutional flow** (`institutional-flow` Mode A, if not already run this session): the
+  volume-signature verdict is the tiebreaker for this layer — crowded-and-DISTRIBUTING is a
+  ❌ regardless of analyst tone; cold-but-ACCUMULATING upgrades a NEUTRAL to ✅. Record the
+  verdict in the journal's checklist snapshot.
 
 **Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
 
@@ -183,13 +200,16 @@ Layer 0 (Risk/Reward) must pass before counting other layers.
 | PASS | 2/4 | Low | Wait. Paper trade to track the thesis |
 | PASS | 1/4 | None | No trade. Note what would need to change. |
 
-### Always Specify Four Numbers
+### Always Specify Four Numbers — and the Exit Plan
 
 Every recommendation must include:
 1. **Entry zone**: The price range where the R/R becomes favorable
 2. **Stop-loss**: The level at which the trade thesis is broken
 3. **Target**: The first realistic resistance / catalyst price objective
 4. **R/R Ratio**: Explicitly state (Target−Entry) ÷ (Entry−Stop)
+5. **Exit plan** (per the trade-management rules in the constants): breakeven at +1R, then
+   *partial-at-2R* or *MA-trail* — pick one now, plus the time-stop date. A trade without a
+   pre-chosen exit plan is only half planned.
 
 ### Expected Value Statement (optional but powerful)
 If you have a rough win rate estimate for this setup type, state the EV explicitly:
@@ -227,7 +247,7 @@ Structure the output as follows:
 
 ### Layer 0: Risk/Reward Gate
 - Entry zone: $XX–$XX
-- Stop-loss: $XX ([reason: below 50MA / key support / -7% rule])
+- Stop-loss: $XX ([reason: below 50MA / key support / max-distance rule per constants])
 - Target: $XX ([reason: resistance level / catalyst objective])
 - R/R Ratio: X.X:1 → PASS / MARGINAL / REJECT
 
@@ -272,4 +292,5 @@ Adjustments for other assets:
 
 - **S&P 500 / Index ETFs**: Replace earnings catalyst with FOMC/macro events. Use Shiller CAPE as valuation layer instead of PE.
 - **Gold / GLD**: Replace RSI momentum with real interest rate direction (TIPS yield). Catalyst = Fed meetings, CPI prints.
-- **Bitcoin**: Replace fundamental valuation with MVRV ratio. Add exchange netflow and funding rate to sentiment layer.
+- **BTC / ETH**: don't adapt this skill — use `crypto-swing-analysis`, which is the same
+  framework with crypto-native layers (same numbering: 1 macro, 2 catalyst, 3 technical, 4 sentiment).
