@@ -214,6 +214,12 @@ above trend support" check.
 
 **Only consider building a position at a score of 7+, either track.**
 
+**Scores are a shortlisting device, not a measurement.** They're judgment calls and won't
+be perfectly reproducible run-to-run, so: record the sub-score for each dimension with a
+one-line justification (what fact earned the points), and never treat 7-vs-6 as a real
+distinction — a borderline score means "look closer," and the real gate is
+`swing-trade-analysis`'s Layer 0, which is arithmetic, not judgment.
+
 ---
 
 ## Step 5: Hand Off to swing-trade-analysis
@@ -273,3 +279,11 @@ run the top candidate(s) through `swing-trade-analysis` before sizing any actual
 
 Past performance of these names is not a guarantee the same pattern repeats — use this table to
 understand the *type* of setup being targeted in each track, not as current recommendations.
+
+**This table is survivorship-biased by construction** — it contains only setups that worked.
+The same patterns fail constantly: Track A dips that were actually thesis breaks (the Dip
+Diagnosis exists because of them), and Track B "completed bottoms" that were mid-decline
+consolidations. The base rate for these setups is closer to a coin flip than this table
+implies; the edge is in the R/R of the entries, not the pattern's hit rate. As the journal
+accumulates real closed trades, *your own* failed setups become the counter-table — review
+them alongside this one.

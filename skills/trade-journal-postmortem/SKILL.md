@@ -56,9 +56,10 @@ instead of manual math:
 1. Scan `<JOURNAL_SUBFOLDER>` for all notes with `status: open` and sum their `risk_pct` —
    **total, and grouped by theme** (the note's primary tag).
 2. Get the ceiling in effect: the regime-scaled ceiling from today's `market-regime`
-   verdict (see the regime-scaled heat table in `trading-constants.md`). If no regime
-   verdict exists in this session, run `market-regime` first — don't fall back to the
-   flat 6%.
+   verdict (see the regime-scaled heat table in `trading-constants.md`), then apply the
+   **drawdown circuit breaker** on top — the effective ceiling is whichever is lower.
+   If no regime verdict exists in this session, run `market-regime` first — don't fall
+   back to the flat 6%.
 3. Report three things: current total heat vs. ceiling, **heat by theme vs. the
    correlated-exposure cap** (half the ceiling per theme — see constants), and the
    **remaining risk budget** for a new trade. If a proposed trade's risk would exceed
@@ -76,6 +77,9 @@ Triggered when a trade is taken (often right after an analysis skill passes Laye
 Capture the *plan* while it's honest — before outcome bias sets in:
 - Ticker/coin, date, direction
 - Entry zone, stop, target, **R/R ratio**, planned position size & % portfolio risk
+- The **exit plan**, chosen now per the trade-management rules in `trading-constants.md`:
+  breakeven at +1R, then *either* partial at +2R *or* MA-trail (pick one → `exit_plan:`),
+  plus the time-stop date
 - The checklist snapshot: which layers were green, the catalyst and its date
 - Today's `market-regime` verdict (`regime_at_entry`) and a Heat Check confirming the
   trade fits both the regime-scaled ceiling and the theme cap
@@ -86,21 +90,36 @@ Write it as a new journal note (schema below) with `status: open`.
 ### Mode 2 — Close + postmortem (at exit)
 Triggered when a position is closed. Pull the actual fills (IBKR read-only or user-provided), then:
 1. **Plan vs. actual:** planned entry/stop/target vs. real fills; realized **R-multiple** = (exit − entry) ÷ (entry − planned stop).
-2. **MAE / MFE:** worst and best excursion while open — did you get shaken out near the lows, or leave a runner?
-3. **Process adherence** (score against `trading-constants.md`, *separate from P&L*):
+2. **MAE / MFE — computed, not recalled:** pull the holding period's low and high from IBKR
+   (`get_price_history` between the open and close dates; daily bars are fine). MAE =
+   (period low − entry) ÷ (entry − planned stop); MFE = (period high − entry) ÷ (entry −
+   planned stop). Memory cannot reconstruct these — if IBKR is unavailable, record "n/a"
+   rather than a guess. Was the exit shaken out near the period low? Did the trade see
+   +2R and give it back (exit plan not followed)?
+3. **Exit-plan adherence:** was the `exit_plan` chosen at entry actually executed —
+   breakeven move at +1R, the chosen partial/trail at +2R, the time stop honored?
+   Deviations score as process losses even when they made money.
+4. **Process adherence** (score against `trading-constants.md`, *separate from P&L*):
    - Did Layer 0 actually pass before entry, or was the gate skipped?
    - Was risk within the 1–2% cap and total heat under the ceiling?
    - Was the stop respected, or moved/widened in the moment?
    - Held through earnings against the rule?
    - **A winning trade that broke the rules is a process loss; a losing trade that followed them is a process win.** Score both axes.
-4. **One concrete lesson** and, if it recurs, a candidate rule for next session.
+5. **Month-to-date drawdown update:** add this trade's realized P&L to the running
+   month-to-date figure and check it against the **drawdown circuit breaker** in
+   `trading-constants.md` — if a throttle level is crossed, state the reduced caps
+   explicitly (they apply from the next session).
+6. **One concrete lesson** and, if it recurs, a candidate rule for next session.
 
 Update the note to `status: closed` with the postmortem section filled in.
 
 ### Mode 3 — Periodic review (weekly / monthly)
 Triggered by "review my trades" or via `workflows/weekly-review.md`. Read all closed notes in
 the window and aggregate:
-- Win rate, average win R, average loss R, **expected value per trade** (see constants).
+- Win rate, average win R, average loss R, **expected value per trade** (see constants —
+  and net of friction, per the EV section there).
+- **Current drawdown-throttle status** (month-to-date realized P&L vs. the circuit-breaker
+  levels) — state it even when it's "no throttle."
 - Process-adherence rate (how often rules were followed) vs. outcome — the relationship matters
   more than either number alone.
 - Recurring patterns (e.g. "chasing RSI > 70 entries," "cutting winners early").
@@ -137,6 +156,8 @@ planned_target: 220
 planned_rr: 2.5
 risk_pct: 1.5
 regime_at_entry: GREEN    # market-regime verdict the day the thesis opened
+exit_plan: partial-at-2R  # partial-at-2R | ma-trail — chosen at entry, per constants
+time_stop: 2026-07-08     # exit by this date if no +1R progress
 catalyst: earnings 2026-07-15
 tags: [swing, semis]
 ---

@@ -69,6 +69,44 @@ Three semi positions are one trade wearing three tickers. In addition to the tot
 
 ---
 
+## Trade management (after entry, before exit)
+
+Entry discipline is half the system; these rules govern the other half. The exit plan is
+chosen **at entry** and written into the thesis note — never invented mid-trade.
+
+- **The stop is inviolable.** It moves in one direction only (toward profit). Widening a
+  stop is a process loss regardless of outcome.
+- **At +1R:** move the stop to breakeven. The trade is now a free option.
+- **At +2R:** take 1/3–1/2 off, or trail the stop below the 10/20-day MA — **pick one at
+  entry** and record it in the thesis (`exit_plan:` field). Both are fine; switching
+  between them mid-trade is how winners get donated back.
+- **Time stop:** no +1R progress within half the catalyst window (or 10 trading days if
+  the catalyst logic has stalled) → exit. Flat capital in a dead trade is paying
+  opportunity cost to feel patient.
+- **Gap through the stop:** the loss is already taken — exit on the open or the first
+  failed bounce. Never hold waiting to "get back to the stop"; that converts a planned
+  1R loss into an unplanned thesis.
+- **Crypto:** stops must be **resting orders at the exchange**, never mental. The system
+  reviews once a day; the market trades while you sleep.
+
+---
+
+## Drawdown circuit breaker (equity-curve throttle)
+
+Judgment degrades fastest right after losses; the throttle is mechanical so it can't be
+negotiated with in the moment. Measured on **realized month-to-date P&L** as % of portfolio:
+
+| Month-to-date drawdown | Effect |
+|---|---|
+| ≥ −4% | All risk caps halve (per-trade cap and heat ceiling) for the rest of the month |
+| ≥ −6% | **No new positions until the 1st of next month.** Manage/exit existing only. |
+
+Resets on the 1st. The after-close review updates the running figure; the weekly review
+reports current throttle status. The throttle **stacks with** the regime scaling (apply
+whichever ceiling is lower).
+
+---
+
 ## Macro Filter — VIX thresholds
 
 | Asset class | Green | Caution | Red (skip/wait) |
@@ -114,6 +152,11 @@ below it, any long is counter-trend — size down and take profit faster).
 Direction is close to a coin flip; the R/R ratio is the shape of the die. A 35% win rate at
 3:1 is +EV; a 70% win rate at 0.5:1 is −EV. Optimize the die, not the hit rate.
 
+**EV is gross — subtract friction before calling a setup +EV.** Spread + slippage runs
+roughly 0.1–0.3% per side (worse in thin names — this is why the hunter's liquidity score
+exists), and short-term capital gains tax down-weights every winner. Marginal setups
+(1.5–2:1) frequently die on friction alone; that is part of why the gate rejects them.
+
 ---
 
 ## Market-regime inputs (used by `market-regime`)
@@ -139,6 +182,14 @@ A candidate rule from the journal gets promoted into this file only if **all thr
    loss R) versus not applying it. Below 20 trades, promote provisionally and tag the rule
    `provisional:` here — the weekly review re-checks provisional rules as the sample grows,
    and demotes any that fail the back-check.
+
+**Statistical honesty:** 20 trades is a floor, not proof — at that size, win-rate
+differences of ±15 points are indistinguishable from luck and average-R is hostage to one
+or two outliers. Until ~50 closed trades exist, require the back-checked effect to be
+**large** (≥ 0.3R improvement in average realized R), keep everything `provisional:`, and
+treat any rule that only works after excluding an outlier as noise. **Regime attribution**
+needs ≥ 10 trades *per regime bucket* before a GREEN-vs-CAUTION comparison means anything —
+report the counts alongside the comparison so a thin bucket can't masquerade as a finding.
 
 ---
 

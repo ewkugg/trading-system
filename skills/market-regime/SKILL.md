@@ -83,6 +83,26 @@ Judgment call at the margins: **downgrade, don't average.** If two inputs say GR
 say RISK-OFF, the verdict is CAUTION at best — mixed signals are themselves information
 that the environment is not clean.
 
+**Hysteresis — downgrade fast, upgrade slow.** A downgrade takes effect immediately.
+An **upgrade requires the improved conditions to hold for 2 consecutive sessions**
+(check yesterday's verdict in the journal's recent theses / the pre-market summaries).
+This stops a CAUTION→GREEN→CAUTION flicker from churning the heat ceiling — one green
+day after distribution is a bounce until proven otherwise.
+
+### Crypto sub-verdict (only when crypto positions are held or contemplated)
+
+US-equity breadth and distribution days say little about BTC. When relevant, add a
+crypto-native read alongside the main verdict, using the same GREEN/CAUTION/RISK-OFF
+scale:
+- **BTC vs its own 200-day MA** (below = any long is counter-trend — the crypto skill's
+  own rule)
+- **Funding regime:** persistently positive and elevated = crowded longs; deeply negative = washed out
+- **ETF / stablecoin flows:** sustained outflows = institutional bid withdrawn
+- DXY direction (from the brief, if it ran)
+
+The stricter of the two verdicts governs crypto trades; the equity verdict alone governs
+stock trades.
+
 ---
 
 ## Step 3: Output the verdict and the heat ceiling

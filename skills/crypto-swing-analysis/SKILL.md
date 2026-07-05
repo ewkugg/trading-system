@@ -67,6 +67,12 @@ have moved enough intraday to matter, and re-fetching just burns calls for the s
 Otherwise, search for current values before running any layer. Each search should be fresh —
 do not rely on memory for price or sentiment data.
 
+**Prefer computed numbers over scraped ones.** If a crypto-capable data connector is
+available (IBKR carries BTC/ETH via crypto contracts and futures), pull daily bars and
+**compute** RSI(14) and the 20/50/200-day MAs directly rather than trusting a scraped
+article's values — stops sit at these levels. web_search remains the source for
+sentiment-type data (Fear & Greed, funding, ETF flows).
+
 ### For BTC:
 | Data Point | Search Query |
 |---|---|
@@ -196,13 +202,16 @@ Layer 0 must PASS before counting other layers.
 | PASS | 2/4 | Low | Wait. Track the thesis. |
 | PASS | 1/4 | None | No trade. State what would need to change. |
 
-### Always Specify Four Numbers
+### Always Specify Four Numbers — and the Exit Plan
 
 Every recommendation must include:
 1. **Entry zone**: Price range where R/R becomes favorable
-2. **Stop-loss**: Level where trade thesis is broken
+2. **Stop-loss**: Level where trade thesis is broken — and it must be a **resting order at
+   the exchange**, never mental (24/7 market, per constants)
 3. **Target**: First realistic resistance / catalyst price objective
 4. **R/R Ratio**: Explicitly state (Target−Entry) ÷ (Entry−Stop)
+5. **Exit plan** (per the trade-management rules in the constants): breakeven at +1R, then
+   *partial-at-2R* or *MA-trail* — pick one now, plus the time-stop date.
 
 ### Crypto Position Sizing & Portfolio Risk Cap
 

@@ -52,8 +52,15 @@ move toward an identifiable target, before an identifiable catalyst?*
 
 **Check this conversation first.** If `daily-market-brief` already ran earlier in this session,
 reuse its VIX, 10Y yield, and Nasdaq/S&P trend figures instead of re-searching — they won't have
-moved enough intraday to matter, and re-fetching just burns calls for the same answer. Otherwise,
-search for current values for:
+moved enough intraday to matter, and re-fetching just burns calls for the same answer.
+
+**Prefer computed numbers over scraped ones.** When the Interactive Brokers connector is
+available, it is the **primary** source for anything price-derived: `search_contracts` →
+`get_price_snapshot` for live prices, and `get_price_history` (daily bars) to **compute**
+RSI(14), the 20/50/200-day MAs, and actual swing-high/low support-resistance levels
+yourself. Entries and stops are set at these levels — they deserve exact values, not a
+third-party article's stale or differently-parameterized print. Use web_search as the
+fallback, and for things that aren't price series (earnings dates, analyst consensus, news):
 
 | Data Point | Where to Find | Why It Matters |
 |---|---|---|
@@ -189,13 +196,16 @@ Layer 0 (Risk/Reward) must pass before counting other layers.
 | PASS | 2/4 | Low | Wait. Paper trade to track the thesis |
 | PASS | 1/4 | None | No trade. Note what would need to change. |
 
-### Always Specify Four Numbers
+### Always Specify Four Numbers — and the Exit Plan
 
 Every recommendation must include:
 1. **Entry zone**: The price range where the R/R becomes favorable
 2. **Stop-loss**: The level at which the trade thesis is broken
 3. **Target**: The first realistic resistance / catalyst price objective
 4. **R/R Ratio**: Explicitly state (Target−Entry) ÷ (Entry−Stop)
+5. **Exit plan** (per the trade-management rules in the constants): breakeven at +1R, then
+   *partial-at-2R* or *MA-trail* — pick one now, plus the time-stop date. A trade without a
+   pre-chosen exit plan is only half planned.
 
 ### Expected Value Statement (optional but powerful)
 If you have a rough win rate estimate for this setup type, state the EV explicitly:
