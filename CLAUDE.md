@@ -14,7 +14,10 @@ trading system. It never places, modifies, or cancels orders. Human decision gat
    regenerate with `python3 scripts/build_dist.py`.
 4. **Workflows** (`workflows/*.md`) are the canonical multi-skill routines.
 
-## The system (five layers + meta)
+## The system (five stages + meta)
+
+*(Naming rule: "stage" = a tier of the system pipeline below; "Layer 0–4" = the checklist
+inside the decision skills; "Mode 1–3 / Heat Check" = the journal's functions. Don't mix them.)*
 
 ```
 REGIME → INTEL → DISCOVERY → DECISION → MEMORY   (+ navigator & constants as the meta layer)

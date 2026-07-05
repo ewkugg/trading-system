@@ -20,7 +20,11 @@ just use that skill; reach for the navigator when the goal is broad, ambiguous, 
 
 ---
 
-## The system in five layers
+## The system in five stages
+
+*("Stage" = a tier of this pipeline. "Layer 0–4" always means the checklist inside the
+decision skills — Layer 0 is the R/R gate. The journal's functions are the Heat Check and
+Modes 1–3. Three distinct vocabularies, on purpose.)*
 
 ```
 REGIME       is it safe to trade   → market-regime (sets the heat ceiling for the day)
@@ -35,7 +39,7 @@ MEMORY       what happened / learn → trade-journal-postmortem
 ```
 
 Data flows top to bottom; lessons flow back up. The navigator (this skill) and the constants
-file sit beside all five as the meta layer. The regime verdict scales the portfolio-heat
+file sit beside all five stages as the meta level. The regime verdict scales the portfolio-heat
 ceiling for everything below it (see the regime-scaled heat table in the constants file).
 
 ---
@@ -76,6 +80,7 @@ ceiling for everything below it (see the regime-scaled heat table in the constan
 ## Handoff principle
 
 Every handoff carries forward the numbers already computed (don't re-fetch what a prior skill in
-the same session already pulled — e.g. reuse the brief's VIX/DXY). The journal closes the loop:
+the same session already pulled — the regime verdict + heat ceiling from `market-regime`, the
+open-position list from the journal's Heat Check, the brief's VIX/DXY). The journal closes the loop:
 its periodic review can promote a durable lesson into `references/trading-constants.md`, which then
 updates every skill at once.

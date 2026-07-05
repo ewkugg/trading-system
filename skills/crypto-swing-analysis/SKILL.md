@@ -1,7 +1,7 @@
 ---
 name: crypto-swing-analysis
 description: >
-  A systematic 5-layer checklist framework for swing trading BTC and ETH (days to weeks).
+  A systematic checklist framework — a Layer-0 R/R gate plus a 4-layer checklist — for swing trading BTC and ETH (days to weeks). Layer numbering matches swing-trade-analysis (1 macro, 2 catalyst, 3 technical, 4 sentiment).
   Use this skill whenever the user asks to analyze Bitcoin or Ethereum for swing trading,
   wave trading, or short-to-medium term entry/exit decisions. Triggers include:
   "should I buy BTC now", "is ETH a good entry", "analyze bitcoin for swing trading",
@@ -145,14 +145,17 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 2 — On-Chain Sentiment
-*Purpose: Is the crowd already positioned, or is there room for the move?*
+### Layer 2 — Catalyst Calendar
+*Purpose: Is there a known event in the next 2–6 weeks that can drive a move?*
 
-- **Fear & Greed Index**: Extreme Fear (<25) near support = contrarian long setup. Extreme Greed (>75) = late, expect chop or pullback; don't chase.
-- **Funding rate**: The crowd's leveraged bet. Heavily positive funding = longs crowded, squeeze risk to the downside. Negative funding + extreme fear = squeeze setup to the upside.
-- **ETF flows**: Sustained net inflows = institutional bid underneath price. Outflows = distribution; treat rallies with suspicion.
+- **ETF flow trends** — the dominant institutional catalyst for BTC; watch for accelerating in/outflows.
+- **Macro events** — FOMC, CPI, jobs data. Crypto is highly rate- and liquidity-sensitive.
+- **Protocol events** — for ETH especially: upgrades, staking/roadmap milestones, gas dynamics.
+- **Geopolitical / regulatory** — headlines move crypto faster and harder than stocks.
 
-**Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
+**Output**: YES (catalyst within window) / NO (no near-term catalyst)
+
+If no catalyst exists within 6 weeks, downgrade confidence and reduce target size.
 
 ---
 
@@ -168,17 +171,14 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 4 — Catalyst Calendar
-*Purpose: Is there a known event in the next 2–6 weeks that can drive a move?*
+### Layer 4 — On-Chain Sentiment
+*Purpose: Is the crowd already positioned, or is there room for the move?*
 
-- **ETF flow trends** — the dominant institutional catalyst for BTC; watch for accelerating in/outflows.
-- **Macro events** — FOMC, CPI, jobs data. Crypto is highly rate- and liquidity-sensitive.
-- **Protocol events** — for ETH especially: upgrades, staking/roadmap milestones, gas dynamics.
-- **Geopolitical / regulatory** — headlines move crypto faster and harder than stocks.
+- **Fear & Greed Index**: Extreme Fear (<25) near support = contrarian long setup. Extreme Greed (>75) = late, expect chop or pullback; don't chase.
+- **Funding rate**: The crowd's leveraged bet. Heavily positive funding = longs crowded, squeeze risk to the downside. Negative funding + extreme fear = squeeze setup to the upside.
+- **ETF flows**: Sustained net inflows = institutional bid underneath price. Outflows = distribution; treat rallies with suspicion.
 
-**Output**: YES (catalyst within window) / NO (no near-term catalyst)
-
-If no catalyst exists within 6 weeks, downgrade confidence and reduce target size.
+**Output**: COLD (good for entry) / NEUTRAL / HOT (crowded, caution)
 
 ---
 
@@ -242,9 +242,9 @@ give a precise figure instead.
 | Layer | Status | Key Data |
 |---|---|---|
 | Macro | ✅/⚠️/❌ | VIX: XX, DXY: XXX, Market trend: up/down |
-| On-Chain Sentiment | ✅/⚠️/❌ | Fear & Greed: XX, Funding rate: X.XX%, ETF flows: +/-$XXM |
-| Technical | ✅/⚠️/❌ | RSI: XX, Price vs 50MA: above/below, vs 200MA: above/below |
 | Catalyst | ✅/⚠️/❌ | [Event] in N weeks / no near-term catalyst |
+| Technical | ✅/⚠️/❌ | RSI: XX, Price vs 50MA: above/below, vs 200MA: above/below |
+| On-Chain Sentiment | ✅/⚠️/❌ | Fear & Greed: XX, Funding rate: X.XX%, ETF flows: +/-$XXM |
 
 ### Judgment
 R/R: X:1 | [X]/4 layers green → [High/Medium/Low/No] confidence

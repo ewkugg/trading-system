@@ -32,6 +32,10 @@ is the edge, not hesitation.
 - **Per-trade risk cap:** **1–2% of total portfolio** on any single swing trade.
   Applies identically to stocks and crypto — no looser rule for "less volatile" assets.
 - **Position size = (portfolio risk %) ÷ (entry-to-stop distance %)**
+- **Stop placement:** always at a structural level (support, MA, prior swing low) — never an
+  arbitrary tight %. Default max entry-to-stop distance **~7–8% for stocks**; crypto stops are
+  structural-only (its noise band is wider). If the structural stop is further than the max,
+  the entry is too early or the size must shrink — don't widen the risk to fit the trade.
 - **Portfolio heat cap (aggregate open risk):** **6%** total across all open swing positions.
   Before adding a new trade, sum the risk (entry-to-stop × size) of every open position.
   If the new trade would push total open risk above the ceiling, size down or skip — five

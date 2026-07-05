@@ -46,7 +46,7 @@ If IBKR isn't connected yet, fall back to asking the user for fill price/date or
 
 ---
 
-## Four modes
+## The modes — Heat Check + Modes 1–3
 
 ### Heat Check — portfolio heat & exposure (before any new entry)
 *(Named, not numbered — "Layer 0" is the analysis skills' R/R gate; this is a different thing.)*

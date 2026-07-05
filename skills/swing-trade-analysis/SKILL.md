@@ -1,7 +1,8 @@
 ---
 name: swing-trade-analysis
 description: >
-  A systematic 4-layer checklist framework for swing trading analysis on any stock.
+  A systematic checklist framework — a Layer-0 R/R gate plus a 4-layer checklist
+  (1 macro, 2 catalyst, 3 technical, 4 sentiment) — for swing trading analysis on any stock.
   Use this skill whenever the user asks to analyze a stock for swing trading, wave trading
   (波段交易), or short-to-medium term entry/exit decisions. Triggers include: "should I buy X now",
   "is X a good entry", "analyze X for swing trading", "help me trade X", "给我分析一下X波段", 
@@ -77,7 +78,8 @@ A trade with bad risk/reward should be rejected even if all other layers are gre
 
 **Calculate the three numbers:**
 - **Entry**: The price you would buy at (current price, or target pullback level)
-- **Stop**: The price at which the trade thesis is broken (key support level, MA, or -7% rule)
+- **Stop**: The price at which the trade thesis is broken (key support level, MA — see the
+  stop-placement rule in `trading-constants.md`)
 - **Target**: The first realistic resistance / catalyst-driven price objective
 
 **Reward/Risk Ratio = (Target − Entry) ÷ (Entry − Stop)**
@@ -99,7 +101,7 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 
 ---
 
-### Layer 1 — Macro Filter (weekly check)
+### Layer 1 — Macro Filter
 *Purpose: Is the environment permissive for risk-on trades?*
 
 - **Market regime first:** if `market-regime` ran this session, its verdict overrides the
@@ -231,7 +233,7 @@ Structure the output as follows:
 
 ### Layer 0: Risk/Reward Gate
 - Entry zone: $XX–$XX
-- Stop-loss: $XX ([reason: below 50MA / key support / -7% rule])
+- Stop-loss: $XX ([reason: below 50MA / key support / max-distance rule per constants])
 - Target: $XX ([reason: resistance level / catalyst objective])
 - R/R Ratio: X.X:1 → PASS / MARGINAL / REJECT
 
@@ -276,4 +278,5 @@ Adjustments for other assets:
 
 - **S&P 500 / Index ETFs**: Replace earnings catalyst with FOMC/macro events. Use Shiller CAPE as valuation layer instead of PE.
 - **Gold / GLD**: Replace RSI momentum with real interest rate direction (TIPS yield). Catalyst = Fed meetings, CPI prints.
-- **Bitcoin**: Replace fundamental valuation with MVRV ratio. Add exchange netflow and funding rate to sentiment layer.
+- **BTC / ETH**: don't adapt this skill — use `crypto-swing-analysis`, which is the same
+  framework with crypto-native layers (same numbering: 1 macro, 2 catalyst, 3 technical, 4 sentiment).

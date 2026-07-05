@@ -120,9 +120,8 @@ paraphrase everything in your own words, one short quote (under 15 words) per so
 
 ## Step 4: Notable commentary on X
 
-There's no live X/Twitter firehose connector available by default — check the registry once
-(`search_mcp_registry`) in case one has since been connected; if not, use `web_search` per
-account (e.g. "Nick Timiraos Fed" or "Lisa Abramowicz bonds" + today's date) to surface their
+There's no live X/Twitter firehose connector available by default — check once whether one
+is connected in the current environment; if not, use `web_search` per account (e.g. "Nick Timiraos Fed" or "Lisa Abramowicz bonds" + today's date) to surface their
 most recent relevant posts. Always paraphrase rather than quote verbatim, and don't quote any
 single post over 15 words.
 

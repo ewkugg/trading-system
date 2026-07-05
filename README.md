@@ -19,14 +19,14 @@ trading-system/
 │   └── news-sources.md           ← canonical: curated feeds for the digests
 ├── journal/                      trade notes for scheduled/cloud runs (the system's memory)
 ├── skills/
-│   ├── market-regime/               ← breadth/distribution/FTD → GREEN/CAUTION/RISK-OFF gate
-│   ├── swing-trade-analysis/        ┐
-│   ├── crypto-swing-analysis/       │  master copies of your 5 existing skills
-│   ├── sector-rotation-stock-hunter/│  (now pointing at the constants file)
-│   ├── daily-market-brief/          │
-│   ├── ai-tech-pulse/               ┘
-│   ├── trade-journal-postmortem/    ← NEW: reads Obsidian + IBKR fills, writes postmortems
-│   └── trading-navigator/           ← NEW: router + system map
+│   ├── market-regime/               REGIME: breadth/distribution/FTD → 🟢/🟡/🔴, sets heat ceiling
+│   ├── daily-market-brief/          INTEL: macro/rates/Fed digest
+│   ├── ai-tech-pulse/               INTEL: AI/tech news + handoff feed of ideas
+│   ├── sector-rotation-stock-hunter/ DISCOVERY: position-aware candidate screen (Track A/B)
+│   ├── swing-trade-analysis/        DECISION: Layer-0 gate + 4-layer checklist (stocks)
+│   ├── crypto-swing-analysis/       DECISION: same framework, crypto-native layers (BTC/ETH)
+│   ├── trade-journal-postmortem/    MEMORY: Heat Check + thesis/postmortem/review (Modes 1–3)
+│   └── trading-navigator/           META: router + system map
 ├── workflows/
 │   ├── pre-market-routine.md     regime → heat → brief → hunter → analysis → size → journal
 │   ├── after-close-review.md     pull fills → postmortem each close
@@ -64,17 +64,17 @@ This copies the shared references into each skill so the packaged version is sel
 writes `dist/<skill>.skill`. Upload those in the web app under **Settings → Skills**. Never edit
 the `dist/` files by hand — they're rebuilt from `skills/`.
 
-## Suggested build order (from here)
+## Naming conventions (three vocabularies, kept apart)
 
-1. ✅ Repo + constants file (drift fixed — done in this scaffold)
-2. `trading-navigator` (front door) — included; refine triggers to taste
-3. `trade-journal-postmortem` — included; wire to your vault + IBKR (the main local step)
-4. Workflows — included; adjust gates once the skills they chain feel settled
+- **Stage** — a tier of the system pipeline: REGIME → INTEL → DISCOVERY → DECISION → MEMORY.
+- **Layer 0–4** — the checklist inside the decision skills. Layer 0 is the R/R gate (runs
+  first); Layers 1–4 are always macro, catalyst, technical, sentiment — in both skills.
+- **Heat Check / Modes 1–3** — the journal's functions: heat & exposure check, open thesis,
+  close + postmortem, periodic review.
 
-## Still open
+## Status
 
-- **News source (item 4):** currently delivered as the shared `references/news-sources.md` that
-  both digests read. If you'd rather have a *dedicated* news-sourcing skill instead of a shared
-  reference, that's a small addition — decide once you've used the shared file for a bit.
-- **crypto-swing-analysis** is the reconstructed copy — diff it against your authoritative download
-  if you kept one.
+The system is feature-complete and runs on its own via three scheduled routines
+(see `workflows/daily-automation.md`); scheduled runs journal to `journal/` in this repo.
+Remaining machine-specific setup is the three local steps above. News sourcing is settled
+as the shared `references/news-sources.md` (no dedicated skill needed).
