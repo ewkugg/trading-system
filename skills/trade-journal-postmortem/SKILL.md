@@ -48,21 +48,28 @@ If IBKR isn't connected yet, fall back to asking the user for fill price/date or
 
 ## Four modes
 
-### Mode 0 — Portfolio heat check (before any new entry)
+### Heat Check — portfolio heat & exposure (before any new entry)
+*(Named, not numbered — "Layer 0" is the analysis skills' R/R gate; this is a different thing.)*
 Triggered by "how much heat am I carrying", "can I add another position", or automatically
 as the sizing step of the pre-market routine. This makes the heat ceiling self-enforcing
 instead of manual math:
-1. Scan `<JOURNAL_SUBFOLDER>` for all notes with `status: open` and sum their `risk_pct`.
+1. Scan `<JOURNAL_SUBFOLDER>` for all notes with `status: open` and sum their `risk_pct` —
+   **total, and grouped by theme** (the note's primary tag).
 2. Get the ceiling in effect: the regime-scaled ceiling from today's `market-regime`
    verdict (see the regime-scaled heat table in `trading-constants.md`). If no regime
    verdict exists in this session, run `market-regime` first — don't fall back to the
    flat 6%.
-3. Report: current heat, ceiling in effect, and **remaining risk budget** for a new trade.
-   If a proposed trade's risk would exceed the budget, state the max `risk_pct` that fits
-   (or "no new positions" in RISK-OFF).
+3. Report three things: current total heat vs. ceiling, **heat by theme vs. the
+   correlated-exposure cap** (half the ceiling per theme — see constants), and the
+   **remaining risk budget** for a new trade. If a proposed trade's risk would exceed
+   either cap, state the max `risk_pct` that fits (or "no new positions" in RISK-OFF).
+   A candidate in an already-capped theme is a skip or a swap, not an add.
 4. Cross-check against reality when IBKR is connected: if broker positions exist that have
    no open journal note (or vice versa), flag the mismatch — the journal is only a valid
    heat ledger if it matches the account.
+5. **Output the open-position list** (ticker, theme, risk_pct) so downstream skills in the
+   same session can see it — the hunter uses it to flag candidates that duplicate existing
+   exposure.
 
 ### Mode 1 — Open a thesis (at entry)
 Triggered when a trade is taken (often right after an analysis skill passes Layer 0).
@@ -70,8 +77,8 @@ Capture the *plan* while it's honest — before outcome bias sets in:
 - Ticker/coin, date, direction
 - Entry zone, stop, target, **R/R ratio**, planned position size & % portfolio risk
 - The checklist snapshot: which layers were green, the catalyst and its date
-- Today's `market-regime` verdict (`regime_at_entry`) and a Mode 0 heat check confirming
-  the trade fits the regime-scaled ceiling
+- Today's `market-regime` verdict (`regime_at_entry`) and a Heat Check confirming the
+  trade fits both the regime-scaled ceiling and the theme cap
 - One-sentence thesis and the explicit **invalidation** ("thesis is wrong if ___")
 
 Write it as a new journal note (schema below) with `status: open`.

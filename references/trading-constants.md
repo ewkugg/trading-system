@@ -49,8 +49,19 @@ effect on any given day comes from the `market-regime` skill's verdict:
 | 🟡 CAUTION — uptrend under pressure | 3% (half) | Half-size only, best setups only |
 | 🔴 RISK-OFF — correction | 0–1% | No new positions; manage/exit existing |
 
-`trade-journal-postmortem` Mode 0 computes current open heat from the journal's open
-notes and compares it against **this regime-scaled ceiling**, not the flat 6%.
+`trade-journal-postmortem`'s **Heat Check** computes current open heat from the journal's
+open notes and compares it against **this regime-scaled ceiling**, not the flat 6%.
+
+### Correlated-exposure cap (theme heat)
+
+Three semi positions are one trade wearing three tickers. In addition to the total ceiling:
+
+- **No single theme/sector may carry more than half the regime ceiling in effect**
+  (GREEN: 3% per theme · CAUTION: 1.5% · RISK-OFF: n/a).
+- Theme = the journal note's primary tag (`tags: [swing, semis]` → theme "semis"). Tag
+  honestly — "AI compute" and "semis" are usually the same theme for this purpose.
+- The Heat Check reports heat **by theme**, and a new candidate in an already-capped theme
+  is a skip or a swap (close the weaker position first), not an add.
 
 ---
 

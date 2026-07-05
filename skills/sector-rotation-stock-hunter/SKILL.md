@@ -46,9 +46,16 @@ screen and shouldn't be blended:
 about yet" or asks specifically for early-stage/undiscovered names.
 
 Whichever track: this skill finds and ranks candidates. It does not decide entry price,
-stop-loss, position size, or whether to use margin — that's `swing-trade-analysis`, which every
-candidate from here should pass through before any money moves. See that skill's "Capital
-Efficiency, Concentration & Margin" section for how to size once a candidate clears this screen.
+stop-loss, or position size — that's `swing-trade-analysis`, which every candidate from here
+should pass through before any money moves. Sizing and concentration limits (the 1–2% cap,
+regime-scaled heat ceiling, and correlated-exposure/theme cap) are all defined in
+`references/trading-constants.md`.
+
+**Check current positions first.** If the journal's Heat Check ran this session, use its
+open-position list; otherwise ask for (or pull via IBKR) current holdings before ranking.
+A candidate in a theme the portfolio already holds gets flagged — if that theme is at its
+correlated-exposure cap, the candidate is a **swap decision** (is it better than what's
+held?), never an add. Don't rank the user into a position they already own.
 
 ---
 
@@ -211,14 +218,14 @@ above trend support" check.
 
 ## Step 5: Hand Off to swing-trade-analysis
 
-Once a candidate scores 7+, hand the ticker to `swing-trade-analysis` for entry/stop/target and
-sizing — including whether margin makes sense for this specific candidate (see that skill's
-Capital Efficiency section). Track A names, being more liquid, are the more natural candidates
-for margin use; Track B names usually aren't.
+Once a candidate scores 7+, hand the ticker to `swing-trade-analysis` for entry/stop/target
+and sizing.
 
-If multiple Track A names from the *same* theme clear the bar at once (likely, since "go with the
-flow" naturally produces correlated candidates), flag that explicitly when handing off — that's
-exactly the case `swing-trade-analysis`'s correlated-exposure cap exists for.
+If multiple Track A names from the *same* theme clear the bar at once (likely, since "go with
+the flow" naturally produces correlated candidates), flag that explicitly when handing off —
+that's exactly the case the **correlated-exposure cap** in `trading-constants.md` exists for:
+the theme as a whole can carry at most half the regime heat ceiling, however many tickers
+it's spread across.
 
 ---
 

@@ -7,7 +7,7 @@ read-only IBKR):
 
 | Routine | Schedule (UTC) | Runs | Delivers |
 |---|---|---|---|
-| **Pre-market** | 12:30 Mon–Fri (~08:30 ET) | `workflows/pre-market-routine.md` steps 0–4 (regime → heat → brief → hunt → gate) | Regime verdict, heat budget, and any candidates that passed Layer 0 — as a message to review before the open |
+| **Pre-market** | 12:30 Mon–Fri (~08:30 ET) | `workflows/pre-market-routine.md` steps 1–6 (regime → heat → brief → hunt → gate) | Regime verdict, heat budget, and any candidates that passed Layer 0 — as a message to review before the open |
 | **After-close** | 20:45 Mon–Fri (~16:45 ET) | `workflows/after-close-review.md` | Postmortems for the day's closes, open-thesis invalidation checks; journal notes committed to `journal/` |
 | **Weekly review** | 21:30 Fri | `workflows/weekly-review.md` | Aggregates, regime attribution, falsifiable candidate rules; provisional-rule re-checks |
 

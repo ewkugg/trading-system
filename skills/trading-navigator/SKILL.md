@@ -45,7 +45,7 @@ ceiling for everything below it (see the regime-scaled heat table in the constan
 | User goal / phrasing | Send them to |
 |---|---|
 | "is it safe to trade", "market health/breadth", "how much exposure", "大盘环境" | `market-regime` |
-| "how much heat am I carrying", "can I add a position" | `trade-journal-postmortem` (Mode 0) |
+| "how much heat am I carrying", "can I add a position" | `trade-journal-postmortem` (Heat Check) |
 | "what's going on in markets", "morning macro", "今日市场" | `daily-market-brief` |
 | "what's new in AI/tech", "interesting takes on X" | `ai-tech-pulse` |
 | "find candidates in [sector]", "what's hot right now" | `sector-rotation-stock-hunter` |

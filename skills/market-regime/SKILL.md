@@ -90,7 +90,7 @@ that the environment is not clean.
 The regime maps to a **portfolio-heat ceiling** (canonical mapping in
 `references/trading-constants.md`): GREEN → full ceiling, CAUTION → half, RISK-OFF →
 no new positions. State the ceiling explicitly so downstream skills and the journal's
-heat check (`trade-journal-postmortem` Mode 0) can use it without re-deriving it.
+Heat Check (`trade-journal-postmortem`) can use it without re-deriving it.
 
 ```
 ## Market Regime — [Date]
@@ -115,7 +115,7 @@ e.g. "a 6th distribution day", "an FTD on volume", "breadth reclaiming 60%"]
 
 - **→ `swing-trade-analysis` / `crypto-swing-analysis`:** the verdict feeds their Layer 1
   macro filter — a RISK-OFF verdict means Layer 1 FAILs regardless of that day's VIX print.
-- **→ `trade-journal-postmortem` (Mode 0):** the heat ceiling from this verdict is the
+- **→ `trade-journal-postmortem` (Heat Check):** the heat ceiling from this verdict is the
   number open-position risk gets compared against.
 - **→ `sector-rotation-stock-hunter`:** in RISK-OFF, the hunter should build watchlists
   only — no "buyable dip" verdicts while the general market is in correction.
