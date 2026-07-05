@@ -130,6 +130,10 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 ### Layer 1 — Macro Filter
 *Purpose: Is the broad risk environment permissive?*
 
+- **Market regime first:** if `market-regime` ran this session, its verdict overrides the
+  spot checks below — 🔴 RISK-OFF means Layer 1 FAILs (crypto sells off hardest in a
+  risk-off tape), 🟡 CAUTION caps size at half within the reduced heat ceiling. If no
+  verdict exists yet, run `market-regime` before continuing.
 - **VIX < 18**: Green. (Tighter than the stock skill's <20 threshold — intentional. Crypto's
   baseline volatility is higher, so the same level of market fear shows up at a lower VIX print.)
 - **VIX 18–25**: Yellow. Proceed with smaller size, tighter structural stops.

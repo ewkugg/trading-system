@@ -34,9 +34,23 @@ is the edge, not hesitation.
 - **Position size = (portfolio risk %) ÷ (entry-to-stop distance %)**
 - **Portfolio heat cap (aggregate open risk):** **6%** total across all open swing positions.
   Before adding a new trade, sum the risk (entry-to-stop × size) of every open position.
-  If the new trade would push total open risk above 6%, size down or skip — five "safe" 2%
-  trades quietly become 10% exposure without this cap.
-  *(6% is the default; set your own ceiling and change it here.)*
+  If the new trade would push total open risk above the ceiling, size down or skip — five
+  "safe" 2% trades quietly become 10% exposure without this cap.
+  *(6% is the full-ceiling default; set your own and change it here.)*
+
+### Regime-scaled heat ceiling
+
+The 6% ceiling is the **maximum**, allowed only in a confirmed uptrend. The ceiling in
+effect on any given day comes from the `market-regime` skill's verdict:
+
+| Regime (from `market-regime`) | Heat ceiling in effect | New positions? |
+|---|---|---|
+| 🟢 GREEN — confirmed uptrend | 6% (full) | Yes |
+| 🟡 CAUTION — uptrend under pressure | 3% (half) | Half-size only, best setups only |
+| 🔴 RISK-OFF — correction | 0–1% | No new positions; manage/exit existing |
+
+`trade-journal-postmortem` Mode 0 computes current open heat from the journal's open
+notes and compares it against **this regime-scaled ceiling**, not the flat 6%.
 
 ---
 
@@ -84,6 +98,32 @@ below it, any long is counter-trend — size down and take profit faster).
 
 Direction is close to a coin flip; the R/R ratio is the shape of the die. A 35% win rate at
 3:1 is +EV; a 70% win rate at 0.5:1 is −EV. Optimize the die, not the hit rate.
+
+---
+
+## Market-regime inputs (used by `market-regime`)
+
+- **Distribution day:** index closes down ≥ 0.2% on volume higher than the prior session;
+  counted over a rolling 25-session window. 3–4 = caution; **5+ on either index = pressure**.
+- **Follow-through day (FTD):** on day 4+ of a rally attempt, a major index gains ≥ 1.25%
+  on higher volume than the prior day. A correction is not over until an FTD confirms it.
+- **Breadth bands (% of S&P 500 above 50-day MA):** > 60% healthy · 40–60% mixed · < 40% narrow.
+- **Tie-break rule: downgrade, don't average.** Mixed inputs → the lower regime.
+
+---
+
+## Rule-promotion standard (weekly review → this file)
+
+A candidate rule from the journal gets promoted into this file only if **all three** hold:
+
+1. **Falsifiable.** Stated with an explicit invalidation, same as a trade thesis:
+   "Rule: ___. This rule is wrong if ___." A rule that can't be wrong can't be trusted.
+2. **Recurring.** The pattern appears in ≥ 3 separate closed trades, not one memorable loss.
+3. **Back-checked.** Once ≥ 20 closed trades exist in the journal: applying the rule
+   retroactively to the closed-trade log must improve average realized R (or cut average
+   loss R) versus not applying it. Below 20 trades, promote provisionally and tag the rule
+   `provisional:` here — the weekly review re-checks provisional rules as the sample grows,
+   and demotes any that fail the back-check.
 
 ---
 

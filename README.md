@@ -17,7 +17,9 @@ trading-system/
 ├── references/
 │   ├── trading-constants.md      ← canonical: R/R gate, 1–2% cap, portfolio heat, VIX/RSI
 │   └── news-sources.md           ← canonical: curated feeds for the digests
+├── journal/                      trade notes for scheduled/cloud runs (the system's memory)
 ├── skills/
+│   ├── market-regime/               ← breadth/distribution/FTD → GREEN/CAUTION/RISK-OFF gate
 │   ├── swing-trade-analysis/        ┐
 │   ├── crypto-swing-analysis/       │  master copies of your 5 existing skills
 │   ├── sector-rotation-stock-hunter/│  (now pointing at the constants file)
@@ -26,9 +28,10 @@ trading-system/
 │   ├── trade-journal-postmortem/    ← NEW: reads Obsidian + IBKR fills, writes postmortems
 │   └── trading-navigator/           ← NEW: router + system map
 ├── workflows/
-│   ├── pre-market-routine.md     brief → hunter → analysis → size → journal (with gates)
+│   ├── pre-market-routine.md     regime → heat → brief → hunter → analysis → size → journal
 │   ├── after-close-review.md     pull fills → postmortem each close
-│   └── weekly-review.md          aggregate → patterns → next-week rules
+│   ├── weekly-review.md          aggregate → regime attribution → falsifiable rules
+│   └── daily-automation.md       the self-running loop: 3 scheduled routines + journal/ state
 └── scripts/
     └── build_dist.py             regenerate dist/*.skill from skills/ (constants inlined)
 ```

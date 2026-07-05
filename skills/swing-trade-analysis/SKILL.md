@@ -102,6 +102,10 @@ If REJECT → stop here. Note the entry price that *would* make it acceptable, a
 ### Layer 1 — Macro Filter (weekly check)
 *Purpose: Is the environment permissive for risk-on trades?*
 
+- **Market regime first:** if `market-regime` ran this session, its verdict overrides the
+  spot checks below — 🔴 RISK-OFF means Layer 1 FAILs regardless of today's VIX print, and
+  🟡 CAUTION caps this trade at half size within the reduced heat ceiling. If no verdict
+  exists yet, run `market-regime` before continuing.
 - **VIX < 20**: Green. Clean environment for swing trades.
 - **VIX 20–25**: Yellow. Proceed with smaller size, tighter stops.
 - **VIX > 25**: Red. Skip or wait. Even good setups fail in fearful markets.

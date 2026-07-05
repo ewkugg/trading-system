@@ -14,11 +14,13 @@ trading system. It never places, modifies, or cancels orders. Human decision gat
    regenerate with `python3 scripts/build_dist.py`.
 4. **Workflows** (`workflows/*.md`) are the canonical multi-skill routines.
 
-## The system (four layers + meta)
+## The system (five layers + meta)
 
 ```
-INTEL → DISCOVERY → DECISION → MEMORY        (+ navigator & constants as the meta layer)
+REGIME → INTEL → DISCOVERY → DECISION → MEMORY   (+ navigator & constants as the meta layer)
 ```
+- **Regime:** `market-regime` (breadth / distribution days / FTD → GREEN/CAUTION/RISK-OFF
+  verdict, which scales the portfolio-heat ceiling for everything downstream)
 - **Intel:** `daily-market-brief`, `ai-tech-pulse`
 - **Discovery:** `sector-rotation-stock-hunter`
 - **Decision:** `swing-trade-analysis`, `crypto-swing-analysis`
@@ -26,12 +28,21 @@ INTEL → DISCOVERY → DECISION → MEMORY        (+ navigator & constants as t
 - **Meta:** `trading-navigator` (router), `references/` (constants + sources)
 
 Data flows down; lessons flow back up via the weekly review promoting durable rules into the
-constants file.
+constants file — only through the **rule-promotion standard** defined there (falsifiable,
+recurring in ≥3 trades, back-checked against the closed-trade log).
+
+## State & automation
+
+- **Journal:** local runs write to the Obsidian vault; scheduled/cloud runs use the repo's
+  `journal/` folder and must commit + push it (see `workflows/daily-automation.md`).
+- **Daily loop:** three scheduled routines (pre-market, after-close, weekly review) keep the
+  system running on its own; they prepare and journal but never trade — human gates stay.
 
 ## Safety
 
 - `trade-journal-postmortem` is **read-only** on the broker — it reads fills/positions to compare
-  plan vs. actual, and writes only to the Obsidian vault. No order actions, ever.
+  plan vs. actual, and writes only to the Obsidian vault (or the repo's `journal/` folder in
+  cloud runs). No order actions, ever.
 - Nothing in this repo should be framed as financial advice; outputs are analysis the user acts on.
 
 ## Local setup the user must complete (machine-specific, not in the repo)

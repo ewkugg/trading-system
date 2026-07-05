@@ -249,7 +249,7 @@ run the top candidate(s) through `swing-trade-analysis` before sizing any actual
 - ❌ Don't treat "already in the news" as disqualifying in Track A — that's the wrong instinct for momentum trading
 - ❌ Don't skip the Dip Diagnosis — buying a dip without checking *why* it's down is how you catch a falling knife
 - ❌ In Track B, don't chase a name that's already run 100%+ — the easy money in the leg is gone
-- ❌ Don't ignore broader market regime — these setups fail more in elevated-VIX/sector-downtrend tape (check via `swing-trade-analysis`'s macro layer)
+- ❌ Don't ignore broader market regime — run `market-regime` first; in 🔴 RISK-OFF this skill builds watchlists only, no BUYABLE DIP verdicts (three of four stocks follow the general market)
 - ❌ Don't size or stop-loss a position here — that's `swing-trade-analysis`'s job
 - ✅ If you can't find a high-conviction single name, the sector ETF itself is reasonable default exposure to the theme
 

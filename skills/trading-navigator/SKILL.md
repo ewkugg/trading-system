@@ -20,9 +20,11 @@ just use that skill; reach for the navigator when the goal is broad, ambiguous, 
 
 ---
 
-## The system in four layers
+## The system in five layers
 
 ```
+REGIME       is it safe to trade   → market-regime (sets the heat ceiling for the day)
+   ↓
 INTEL        what's happening      → daily-market-brief, ai-tech-pulse
    ↓
 DISCOVERY    what to look at       → sector-rotation-stock-hunter
@@ -33,7 +35,8 @@ MEMORY       what happened / learn → trade-journal-postmortem
 ```
 
 Data flows top to bottom; lessons flow back up. The navigator (this skill) and the constants
-file sit beside all four as the meta layer.
+file sit beside all five as the meta layer. The regime verdict scales the portfolio-heat
+ceiling for everything below it (see the regime-scaled heat table in the constants file).
 
 ---
 
@@ -41,6 +44,8 @@ file sit beside all four as the meta layer.
 
 | User goal / phrasing | Send them to |
 |---|---|
+| "is it safe to trade", "market health/breadth", "how much exposure", "大盘环境" | `market-regime` |
+| "how much heat am I carrying", "can I add a position" | `trade-journal-postmortem` (Mode 0) |
 | "what's going on in markets", "morning macro", "今日市场" | `daily-market-brief` |
 | "what's new in AI/tech", "interesting takes on X" | `ai-tech-pulse` |
 | "find candidates in [sector]", "what's hot right now" | `sector-rotation-stock-hunter` |

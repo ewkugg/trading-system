@@ -34,12 +34,35 @@ This skill needs two local connections. Fill these in and Claude Code resolves t
 | Journal folder | `<JOURNAL_SUBFOLDER>` | Where trade notes go (e.g. `Trades/`) |
 | IBKR access | `<IBKR_READONLY>` | Read-only fills/positions (IBKR MCP, Flex query export, or pasted CSV fallback) |
 
+**Repo fallback (used by scheduled/cloud runs):** if `<OBSIDIAN_VAULT_PATH>` is unset or
+unreachable — e.g. this skill is running in a cloud session as part of the daily automation
+loop (`workflows/daily-automation.md`) — read and write journal notes in the repo's own
+`journal/` folder instead, and **commit + push** any notes created or updated so the journal
+survives the session. The repo is then the sync bridge: point Obsidian at a clone of it (or
+copy notes over) and both environments see the same journal. Same schema either way.
+
 If IBKR isn't connected yet, fall back to asking the user for fill price/date or a pasted CSV.
 **This skill is read-only on the broker — it never sends, modifies, or cancels orders.**
 
 ---
 
-## Three modes
+## Four modes
+
+### Mode 0 — Portfolio heat check (before any new entry)
+Triggered by "how much heat am I carrying", "can I add another position", or automatically
+as the sizing step of the pre-market routine. This makes the heat ceiling self-enforcing
+instead of manual math:
+1. Scan `<JOURNAL_SUBFOLDER>` for all notes with `status: open` and sum their `risk_pct`.
+2. Get the ceiling in effect: the regime-scaled ceiling from today's `market-regime`
+   verdict (see the regime-scaled heat table in `trading-constants.md`). If no regime
+   verdict exists in this session, run `market-regime` first — don't fall back to the
+   flat 6%.
+3. Report: current heat, ceiling in effect, and **remaining risk budget** for a new trade.
+   If a proposed trade's risk would exceed the budget, state the max `risk_pct` that fits
+   (or "no new positions" in RISK-OFF).
+4. Cross-check against reality when IBKR is connected: if broker positions exist that have
+   no open journal note (or vice versa), flag the mismatch — the journal is only a valid
+   heat ledger if it matches the account.
 
 ### Mode 1 — Open a thesis (at entry)
 Triggered when a trade is taken (often right after an analysis skill passes Layer 0).
@@ -47,6 +70,8 @@ Capture the *plan* while it's honest — before outcome bias sets in:
 - Ticker/coin, date, direction
 - Entry zone, stop, target, **R/R ratio**, planned position size & % portfolio risk
 - The checklist snapshot: which layers were green, the catalyst and its date
+- Today's `market-regime` verdict (`regime_at_entry`) and a Mode 0 heat check confirming
+  the trade fits the regime-scaled ceiling
 - One-sentence thesis and the explicit **invalidation** ("thesis is wrong if ___")
 
 Write it as a new journal note (schema below) with `status: open`.
@@ -72,8 +97,19 @@ the window and aggregate:
 - Process-adherence rate (how often rules were followed) vs. outcome — the relationship matters
   more than either number alone.
 - Recurring patterns (e.g. "chasing RSI > 70 entries," "cutting winners early").
-- Output **next-session operating rules** — and if a rule proves durable, propose adding it to
-  `references/trading-constants.md` so the whole system inherits it.
+- **Regime attribution:** group closed trades by the market-regime verdict recorded at
+  entry — did trades opened in CAUTION/RISK-OFF underperform GREEN-regime trades? This is
+  the check that validates (or indicts) the regime gate itself.
+- Output **next-session operating rules**. Every candidate rule must be stated
+  **falsifiably**, with its own invalidation — same discipline as a trade thesis:
+  > "Rule: no entries with RSI > 70. **This rule is wrong if** trades it would have
+  > blocked show avg realized R ≥ the trades it allowed, over the next 20 trades."
+- **Promotion gate:** a rule is proposed for `references/trading-constants.md` only if it
+  passes the **rule-promotion standard** defined there (falsifiable + recurring in ≥ 3
+  trades + back-checked against the closed-trade log once ≥ 20 trades exist; below that,
+  promote as `provisional:`). The back-check is mechanical: replay the closed-trade log,
+  ask "what would avg R have been if this rule had been enforced," and compare. Re-check
+  all `provisional:` rules each week as the sample grows; demote ones that fail.
 
 ---
 
@@ -93,6 +129,7 @@ planned_stop: 178
 planned_target: 220
 planned_rr: 2.5
 risk_pct: 1.5
+regime_at_entry: GREEN    # market-regime verdict the day the thesis opened
 catalyst: earnings 2026-07-15
 tags: [swing, semis]
 ---
